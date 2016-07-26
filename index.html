@@ -57,9 +57,6 @@
                 <label class="col-md-4 control-label" for="plan">Plan</label>
                 <div class="col-md-8">
                     <select id="plan" name="plan" class="form-control">
-                        <option value="1">PLAN ORO</option>
-                        <option value="2">PLAN PLATA</option>
-                        <option value="3">PLAN BRONCE</option>
                     </select>
                 </div>
             </div>
@@ -89,16 +86,6 @@
                 <label class="col-md-4 control-label" for="especialidades">Especialidades</label>
                 <div class="col-md-8">
                     <select id="especialidades" name="especialidades" class="form-control" multiple="multiple">
-                        <option value="1">CARDIOLOGIA</option>
-                        <option value="2">CIRUGIA GENERAL Y LAPAROSCOPICA</option>
-                        <option value="3">CIRUGIA PLASTICA</option>
-                        <option value="4">DERMATOLOGIA</option>
-                        <option value="5">ENDOCRINOLOGIA</option>
-                        <option value="6">GERIATRIA</option>
-                        <option value="7">MEDICINA GENERAL</option>
-                        <option value="8">ODONTOLOGIA</option>
-                        <option value="9">PEDIATRIA</option>
-                        <option value="10">UROLOGIA</option>
                     </select>
                 </div>
             </div>
@@ -107,25 +94,6 @@
                 <label class="col-md-4 control-label" for="analisis">Analisis</label>
                 <div class="col-md-8">
                     <select id="analisis" multiple="multiple">
-                        <option value="1">Biometría Hemática</option>
-                        <option value="2">Química Sanguínea</option>
-                        <option value="3">Perfil de Lípidos</option>
-                        <option value="4">Glucosa</option>
-                        <option value="5">Colesterol</option>
-                        <option value="6">Triglicéridos</option>
-                        <option value="7">Examen general de orina</option>
-                        <option value="8">Reacciones Febriles</option>
-                        <option value="9">Exudado Faríngeo</option>
-                        <option value="10">Grupo sanguíneo</option>
-                        <option value="11">Coproparasitoscopico</option>
-                        <option value="12">Coprológico</option>
-                        <option value="13">Búsqueda de amiba en fresco</option>
-                        <option value="14">Prueba de embarazo</option>
-                        <option value="15">VIH</option>
-                        <option value="16">VDRL</option>
-                        <option value="17">Tiempos de coagulación</option>
-                        <option value="18">Perfil reumático</option>
-                        <option value="19">Pruebas de funcionamiento hepático</option>
                     </select>
                 </div>
             </div>
@@ -133,17 +101,12 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="enviar"></label>
                 <div class="col-md-4">
-                    <button type="button" id="enviar" name="enviar" onclick="adddata()" class="btn btn-inverse">Enviar</button>
+                    <button type="button" id="enviar" name="enviar" onclick="addespe()" class="btn btn-inverse">Enviar</button>
                 </div>
             </div>
         </fieldset>
     </div>
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('#analisis').multiselect();
-        $('#especialidades').multiselect();
-    });
-    </script>
+    
     <div id="map"></div>
     <script>
     var map, marker;
@@ -155,7 +118,7 @@
                 lng: -64.720398
 
             },
-            zoom: 18
+            zoom: 15
         });
         google.maps.event.addListener(map, 'click', function(e) {
             placeMarker(e.latLng);
@@ -190,22 +153,51 @@
     };
     firebase.initializeApp(config);
 
+
+    firebase.database().ref('planes/').orderByKey().once('value', function(snapshot) {
+        var select = "";
+        snapshot.forEach(function(snapshot) {
+            select = select + '<option value="' + snapshot.key + '">' + snapshot.val().nombre + '</option>';
+        });
+        $('#plan').html(select);
+    });
+
+    firebase.database().ref('especialidades/').orderByKey().once('value', function(snapshot) {
+        var select = "";
+        snapshot.forEach(function(snapshot) {
+            select = select + '<option value="' + snapshot.key + '">' + snapshot.val().nombre + '</option>';
+        });
+
+        $('#especialidades').html(select).multiselect();
+
+    });
+
+    firebase.database().ref('analisis/').orderByKey().once('value', function(snapshot) {
+        var select = "";
+        snapshot.forEach(function(snapshot) {
+            select = select + '<option value="' + snapshot.key + '">' + snapshot.val().nombre + '</option>';
+        });
+        $('#analisis').html(select).multiselect();
+
+    });
+
+
+
+
+
     function adddata() {
         var postData = {
-            nombre: $('#nombre').val(),
-            latitud: $('#latitud').val(),
-            longitud: $('#longitud').val()
+            nombre: 'Plan de Bronce',
+            coaseguro: 30
         };
 
 
-        var newPostKey = firebase.database().ref().child('users').push().key;
+        var newPostKey = firebase.database().ref().child('planes').push().key;
 
         var updates = {};
-        updates['/users/' + newPostKey] = postData;
+        updates['/planes/' + newPostKey] = postData;
 
         return firebase.database().ref().update(updates);
-
-
 
     }
     </script>
