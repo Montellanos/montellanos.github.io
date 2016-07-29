@@ -161,75 +161,7 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdY8R5lQPdDO_ffF9WADgbYVsYmpfv3Vw&callback=initMap" async defer></script>
     <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
-    <script>
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyCxMzC3JgNj66Y4plb0TyvcW7IX_-BVm7Q",
-        authDomain: "saludmaps.firebaseapp.com",
-        databaseURL: "https://saludmaps.firebaseio.com",
-        storageBucket: "saludmaps.appspot.com",
-    };
-    firebase.initializeApp(config);
-
-
-    firebase.database().ref('planes/').orderByKey().once('value', function(snapshot) {
-        var select = "";
-        snapshot.forEach(function(snapshot) {
-            select = select + '<option value="' + snapshot.key + '">' + snapshot.val().nombre + '</option>';
-        });
-        $('#plan').html(select);
-    });
-
-    firebase.database().ref('especialidades/').orderByKey().once('value', function(snapshot) {
-        var select = "";
-        snapshot.forEach(function(snapshot) {
-            select = select + '<option value="' + snapshot.key + '">' + snapshot.val().nombre + '</option>';
-        });
-
-        $('#especialidades').html(select).multiselect();
-
-    });
-
-    firebase.database().ref('analisis/').orderByKey().once('value', function(snapshot) {
-        var select = "";
-        snapshot.forEach(function(snapshot) {
-            select = select + '<option value="' + snapshot.key + '">' + snapshot.val().nombre + '</option>';
-        });
-        $('#analisis').html(select).multiselect();
-
-    });
-
-
-
-
-
-    function adddata() {
-        var postData = {
-            nombre :$('#nombre').val(),
-            tipo:$('#tipo').val(),
-            latitud:$('#latitud').val(),
-            longitud:$('#longitud').val(),
-            id_plan:$('#plan').val(),
-            direccion: $('#direccion').val(),
-            descripcion:'Lo mejor en atencion al cliente',
-            horario:'Las 24 horas',
-            telefono:$('#telefono').val(),
-            especialidades:$('#especialidades').val(),
-            analisis:$('#analisis').val()
-            
-        };
-
-        var newPostKey = firebase.database().ref().child('instituciones').push().key;
-
-        var updates = {};
-        updates['/instituciones/' + newPostKey] = postData;
-
-        firebase.database().ref().update(updates);
-        
-        location.reload();
-
-    }
-    </script>
+  
 </body>
 
 </html>
