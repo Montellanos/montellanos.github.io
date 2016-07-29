@@ -36,10 +36,10 @@
                 <label class="col-md-4 control-label" for="tipo">Tipo</label>
                 <div class="col-md-8">
                     <select id="tipo" name="tipo" class="form-control">
-                        <option value="Farmacia">Farmacia</option>
-                        <option value="Hospital">Hospital</option>
-                        <option value="Clinica">Clinica</option>}
-                        <option value="Doctor">Doctor</option>
+                        <option value="F">Farmacia</option>
+                        <option value="H">Hospital</option>
+                        <option value="C">Clinica</option>}
+                        <option value="D">Doctor</option>
                     </select>
                 </div>
             </div>
@@ -80,6 +80,13 @@
             </div>
             <!-- Textarea -->
             <div class="form-group">
+                <label class="col-md-4 control-label" for="direccion">Direccion</label>
+                <div class="col-md-8">
+                    <textarea class="form-control" id="direccion" name="direccion"></textarea>
+                </div>
+            </div>
+            <!-- Textarea -->
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="horario">Horario de atencion</label>
                 <div class="col-md-8">
                     <textarea class="form-control" id="horario" name="horario"></textarea>
@@ -112,7 +119,7 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="enviar"></label>
                 <div class="col-md-4">
-                    <button type="button" id="enviar" name="enviar" onclick="addespe()" class="btn btn-inverse">Enviar</button>
+                    <button type="button" id="enviar" name="enviar" onclick="adddata()" class="btn btn-inverse">Enviar</button>
                 </div>
             </div>
         </fieldset>
@@ -198,17 +205,28 @@
 
     function adddata() {
         var postData = {
-            nombre: 'Plan de Bronce',
-            coaseguro: 30
+            nombre :$('#nombre').val(),
+            tipo:$('#tipo').val(),
+            latitud:$('#latitud').val(),
+            longitud:$('#longitud').val(),
+            id_plan:$('#plan').val(),
+            direccion: $('#direccion').val(),
+            descripcion:'Lo mejor en atencion al cliente',
+            horario:'Las 24 horas',
+            telefono:$('#telefono').val(),
+            especialidades:$('#especialidades').val(),
+            analisis:$('#analisis').val()
+            
         };
 
-
-        var newPostKey = firebase.database().ref().child('planes').push().key;
+        var newPostKey = firebase.database().ref().child('instituciones').push().key;
 
         var updates = {};
-        updates['/planes/' + newPostKey] = postData;
+        updates['/instituciones/' + newPostKey] = postData;
 
-        return firebase.database().ref().update(updates);
+        firebase.database().ref().update(updates);
+        
+        location.reload();
 
     }
     </script>
